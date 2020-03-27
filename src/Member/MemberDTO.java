@@ -13,7 +13,7 @@ public class MemberDTO {
 		this.no = no;
 	}
 	public String getId() {
-		return id;
+		return id;	
 	}
 	public void setId(String id) {
 		this.id = id;

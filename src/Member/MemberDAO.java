@@ -28,7 +28,8 @@ public class MemberDAO {
 	private boolean connect() { //oracle DB에 접속하기 위한 자원
 		boolean cFlag=false;
 		try {//커넥션자원을 sql과 연결
-			conn = DriverManager.getConnection(""+"jdbc:oracle:thin:@localhost:1521:orcl","system","11111111");
+			conn = DriverManager.getConnection
+					(""+"jdbc:oracle:thin:@localhost:1521:orcl","system","11111111");
 			cFlag=true;
 		} catch (SQLException e) {
 			e.printStackTrace();
