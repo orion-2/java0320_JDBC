@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class BasketDAO {
+public class BDAO {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rs; 
-	private static BasketDAO BDAOobj;
+	private static BDAO BDAOobj;
 	
-	private BasketDAO() {
+	private BDAO() {
 	}	
 	static {
 		try {
@@ -25,9 +25,9 @@ public class BasketDAO {
 		}
 	}
 	
-	public static BasketDAO getInstance() {
+	public static BDAO getInstance() {
 		if (BDAOobj == null) {
-			BDAOobj = new BasketDAO();
+			BDAOobj = new BDAO();
 		}
 		return BDAOobj;
 		
@@ -54,8 +54,7 @@ public class BasketDAO {
 				if(stmt != null) {
 					rs = stmt.executeQuery(sql);
 					while(rs.next()) {
-						BasketDTO basket = new BasketDTO();
-						basket.setNo(rs.getString("No"));
+						BDTO basket = new BDTO();
 						basket.setId(rs.getString("ID"));
 						basket.setName(rs.getString("NAME"));
 						basket.setItem(rs.getString("ITEM"));
@@ -76,10 +75,10 @@ public class BasketDAO {
 		
 	}
 	
-	public boolean insertOne(BasketDTO m) {
+	public boolean insertOne(BDTO m) {
 		boolean cFlag = false;
-		if(connect()) {
-			String sql = "INSERT INTO Basket VALUES (NO.NEXTVAL,?,?,?,?,?)";
+		if(this.connect()) {
+			String sql = "INSERT INTO Basket VALUES (?,?,?,?,?)";
 			try {
 				PreparedStatement psmt = conn.prepareStatement(sql);
 				psmt.setString(1, m.getId());
@@ -87,7 +86,6 @@ public class BasketDAO {
 				psmt.setString(3, m.getItem());
 				psmt.setString(4, m.getQuantity());
 				psmt.setString(5, m.getPrice());
-				psmt.executeUpdate();
 				int r = psmt.executeUpdate();
 				
 				if(r > 0) {
@@ -104,41 +102,33 @@ public class BasketDAO {
 		return cFlag;
 	}
 	
-	public void delOne(BasketDTO m) {
-		if(connect()) {
-			String sql = "DELETE FROM BASKET WHERE NO = ? ";
-			PreparedStatement psmt;
-			try {
-				psmt = conn.prepareStatement(sql);
-				psmt.setString(1, m.getNo());
-				psmt.executeUpdate();
-				int r = psmt.executeUpdate();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else {
-			System.out.println("DB立加 坷幅");
-		}
-	}
-	
-	public void modOne(BasketDTO m) {
-		if(connect()) {
-			String sql = "UPDATE BASKET SET ITEM=?,QUANTITY=?, WHERE ID = ? ";
+	public boolean delOne(BDTO m) {
+		 boolean cFlag = false;
+		if(this.connect()) {
+			String sql = "DELETE FROM BASKET WHERE Id = ? ";
 			PreparedStatement psmt;
 			try {
 				psmt = conn.prepareStatement(sql);
 				psmt.setString(1, m.getId());
 				psmt.executeUpdate();
 				int r = psmt.executeUpdate();
+				if(r > 0) {
+					cFlag = true;
+				}
+				psmt.close();
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else {
 			System.out.println("DB立加 坷幅");
+			System.exit(0);
 		}
+		return cFlag;
 	}
+	
+
 	
 	
 }
